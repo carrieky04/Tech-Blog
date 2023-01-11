@@ -1,0 +1,13 @@
+[
+    {
+        "title": "Why MVC is Important",
+        "contents": "MVC allows developers to maintain a true separation of concerns, devising their code between the Model layer for data, the View layer for design, and the Controller layer for application logic.",
+        "comment": "I just learned about this in my class!"
+    },
+
+    {
+        "title": "What is Password Hashing?",
+        "contents": "Password hashing means passing a plain text password through a hashing algorithm to generate a unique value. The downside of hashing is that it is predictable",
+        "comment": "We just learned about using bcrypt in my bootcamp"
+    }
+]
