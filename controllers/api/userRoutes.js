@@ -3,6 +3,7 @@ const { User } = require('../../models');
 
 // Creates new user
 router.post('/', async (req, res) => {
+    console.log("🚀 ~ file: userRoutes.js:6 ~ router.post ~ req", req)
     try {
         const newUser = await User.create(req.body);
 
@@ -14,10 +15,13 @@ router.post('/', async (req, res) => {
         });
     } catch (err) {
         res.status(400).json(err);
+        console.log('ERROR')
     }
 })
 
-// Checks for existing user in database
+
+
+// User Login
 router.post('/login', async (req, res) => {
     try {
         const userData = await User.findOne({ where: { user_name: req.body.user_name} });
@@ -48,3 +52,16 @@ router.post('/login', async (req, res) => {
         res.status(400).json(err);
     }
 })
+
+// User Logout
+router.post('/logout', (req, res) => {
+    if (req.session.logged_in) {
+        req.session.destroy(() => {
+            res.status(204).end();
+        });
+    } else {
+        res.status(404).end();
+    }
+})
+
+module.exports = router;
