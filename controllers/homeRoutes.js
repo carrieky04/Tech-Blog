@@ -1,28 +1,91 @@
-// const router = require('express').Router();
-// const { Post, User } = require('../models');
-// const withAuth = require('../utils/auth');
+const router = require('express').Router();
+const { Post, User } = require('../models');
+const withAuth = require('../utils/auth');
 
-// router.get('/', async (req, res) => {
-//   console.log('test 1')
-//     try {
-//       const postData = await Post.findAll({
-//         include: [
-//             {
-//                 model: User,
-//                 attributes: ['user_name'],
-//             },
-//         ],
-//       });
+// Get all blog posts by title and date created
+router.get('/', async (req, res) => {
+console.log("🚀 ~ file: homeRoutes.js:7 ~ router.get ~ req", req)
 
-//       const posts = postData.map((post) => post.get({ plain: true }));
+    try {
+      const postData = await Post.findAll({
+        attributes: ['title', 'date_created'],
+      });
+      res.status(200).json(postData)
 
-//       res.render('homepage', {
-//         posts,
-//         logged_in: req.session.logged_in
-//       });
-//       console.log('test 2')
-//     } catch (err) {
-//         res.status(500).json(err);
-//         console.log('error')
-//     }
-// });
+    //   const posts = postData.map((post) => post.get({ plain: true }));
+
+    //   res.render('homepage', {
+    //     posts,
+    //     logged_in: req.session.logged_in
+    //   });
+    } catch (err) {
+        res.status(500).json(err);
+    }
+});
+
+// Display all blog post content
+router.get('/post/:id', async (req, res) => {
+    console.log("🚀 ~ file: homeRoutes.js:27 ~ router.get ~ req", req)
+    try {
+        const postData = await Post.findByPk(req.params.id, {
+            include: [
+                {
+                    model: User,
+                    attributes: ['user_name'],
+                }
+            ]
+        });
+        // console.log(postData)
+
+        res.status(200).json(postData);
+
+        // const post = postData.get({ plain: true });
+
+        // res.render('post', {
+        //     ...post,
+        //     logged_in: req.session.logged_in
+        // });
+    } catch (err) {
+        res.status(500).json(err);
+    }
+})
+
+// Update blog post with a comment
+router.put('/post/:id', async (req, res) => {
+    try {
+        const updatedPost = await Post.update(req.body, {
+            where: {
+                id: req.params.id,
+            }
+        })
+
+        if(!updatedPost) {
+            res.status(404).json({ message: 'No post found with this id!'});
+            return;
+        }
+        res.status(200).json(updatedPost);
+    } catch (err) {
+        res.status(500).json(err)
+    }
+})
+
+// Render user dashboard if signed in
+router.get('/dashboard', async (req, res) => {
+    try {
+        const userData = await User.findByPk(req.session.user_id, {
+            attributes: { exclude: ['password'] },
+            include: [{ model: Post }],
+        });
+        res.status(200).json(userData)
+        // const user = userData.get({ plain: true });
+
+        // res.render('dashboard', {
+        //     ...user,
+        //     logged_in: true
+        // });
+    } catch (err) {
+        res.status(500).json(err)
+    }
+})
+
+module.exports = router;
