@@ -2,8 +2,17 @@
   <h2>{{title}}</h2>
   <p>{{contents}}</p>
   <p>Created by {{user.user_name}} on {{format_date date_created}}</p>
-
+<form class='form comment-form'>
+      <div class='form-group'>
+        <label for='comment-box'>Leave a Comment:</label>
+        <input
+          class='form-input'
+          type='text'
+          id='comment-box'
+          name='comment-box'
+        />
+      </div>
   <p>
-    <button class="btn btn-primary">Leave a Comment</button>
+    <button class="btn btn-primary">Submit</button>
   </p>
 </div>
